@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bank Branches</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        select, button {
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function showBranches() {
+            const form = document.getElementById('bankForm');
+            form.submit();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Dropdown for bank selection -->
+        <h1>Select a Bank</h1>
+        <form id="bankForm" action="/branches" method="post">
+            <label for="bankId">Bank:</label>
+            <select id="bankId" name="bankId" onchange="showBranches()">
+                <option value="">--Select a Bank--</option>
+                <th:block th:each="bank : ${banks}">
+                    <option th:value="${bank.id}" th:text="${bank.name}"></option>
+                </th:block>
+            </select>
+        </form>
+
+        <!-- Display bank name and branches if selected -->
+        <div th:if="${bank != null}">
+            <h2 th:text="${bank.name}">Bank Name</h2>
+            <h3>Branches</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch Name</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="branch : ${branches}">
+                        <td th:text="${branch.name}">Branch Name</td>
+                        <td th:text="${branch.address}">Branch Address</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Button to view all services -->
+            <form action="/services" method="get">
+                <input type="hidden" name="bankId" th:value="${bank.id}" />
+                <button type="submit">View All Services</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
